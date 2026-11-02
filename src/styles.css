@@ -1,39 +1,211 @@
+/* Guía de estilo: Material Design 3 — https://m3.material.io/ */
+
+/* R01 · Paleta de colores (tokens M3) — tema claro por defecto */
 :root {
-  --fg-color: #000000;
-  --bg-color: #ffffff;
+  --primary: #6750a4;
+  --on-primary: #fffbfe;
+  --container: #e8def8;
+  --on-container: #21005d;
+  --surface: #fef7ff;
+  --on-surface: #1d1b20;
+  --outline: #79747e;
+  --danger: #b3261d;
+  --ring: #f9dedc;
+
+  /* R02 · Tipografía personalizada (Google Fonts, cargada en index.html) */
+  --font: "Roboto", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
 }
 
+/* R03 · Tema oscuro automático según el SO */
 @media (prefers-color-scheme: dark) {
   :root {
-    --fg-color: #ffffff;
-    --bg-color: #000000;
+    --primary: #d0bcff;
+    --on-primary: #381e72;
+    --container: #4a4458;
+    --on-container: #e8def8;
+    --surface: #141218;
+    --on-surface: #e6e0e9;
+    --outline: #938f99;
+    --danger: #f2b8b5;
+    --ring: #601410;
   }
 }
+
+* { box-sizing: border-box; }
 
 body {
   display: flex;
   flex-direction: column;
   margin: 0;
   height: 100vh;
-  color: var(--fg-color);
-  background: var(--bg-color);
+  height: 100dvh;
+  font-family: var(--font);
+  color: var(--on-surface);
+  background: var(--surface);
+}
+
+/* R05 · Navegación por pestañas con icono */
+nav {
+  background: var(--container);
 }
 
 nav > ul {
   display: flex;
-  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 
 nav > ul > li {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   text-align: center;
 }
 
+nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--on-container);
+  border-bottom: 3px solid transparent;
+}
+
+nav a:hover { background: color-mix(in srgb, var(--primary) 12%, transparent); }
+nav a:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+
+/* Pestaña activa (la de #clock cuando no hay hash) */
+body:has(#clock:target) a[href="#clock"],
+body:has(#alarm:target) a[href="#alarm"],
+body:has(#stopwatch:target) a[href="#stopwatch"],
+body:has(#timer:target) a[href="#timer"],
+body:not(:has(:target)) a[href="#clock"] {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Vistas: solo se muestra la seleccionada (por defecto, el reloj) */
 main {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+}
+
+main > section {
+  display: none;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+main > section:target,
+body:not(:has(:target)) main > #clock {
   display: flex;
 }
 
-main > section:not(:target) {
-  display: none;
+main > section > * {
+  width: 100%;
+  max-width: 480px;
+}
+
+x-clock, x-alarm, x-stopwatch, x-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+time {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+/* Controles */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  color: var(--on-container);
+  background: var(--container);
+  cursor: pointer;
+}
+
+button.start, button.add { color: var(--on-primary); background: var(--primary); }
+button.delete { color: var(--danger); }
+button:hover { filter: brightness(1.1); }
+button:active { transform: scale(0.95); }
+button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Inputs de hora */
+input[type="time"] {
+  min-height: 48px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  color: var(--on-surface);
+  background: transparent;
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  color-scheme: light dark;
+}
+
+input[type="time"]:focus-visible { outline: 2px solid var(--primary); border-color: var(--primary); }
+
+/* Alarmas */
+x-alarm .items, x-timer .items, x-timer .timers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.alarms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--container);
+  border-radius: 16px;
+}
+
+.alarms[paused] { opacity: 0.5; }
+.alarms[paused] .pause, .alarms:not([paused]) .start { display: none; }
+.alarms[ringing] { background: var(--ring); outline: 2px solid var(--danger); }
+
+/* Temporizador */
+x-timer .timers { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+.current-interval { border-color: var(--primary); border-width: 2px; background: var(--container); }
+x-timer[loop] .loop, x-timer:not([loop]) .no-loop { display: none; }
+
+/* R06 · Responsive: en móvil la navegación pasa abajo */
+@media (max-width: 600px) {
+  nav { order: 2; }
+  nav a { border-bottom: 0; border-top: 3px solid transparent; }
+  body:has(#clock:target) a[href="#clock"],
+  body:has(#alarm:target) a[href="#alarm"],
+  body:has(#stopwatch:target) a[href="#stopwatch"],
+  body:has(#timer:target) a[href="#timer"],
+  body:not(:has(:target)) a[href="#clock"] { border-top-color: var(--primary); }
 }

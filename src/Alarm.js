@@ -11,7 +11,7 @@ export default class Alarm extends HTMLElement {
         const { value } = alarm.querySelector("input");
         const date =
           new Date(value).getTime() ||
-          new Date(`${new Date().toLocaleDateString()} ${value}`).getTime();
+          new Date(`${new Date().toLocaleDateString("en-CA")}T${value}`).getTime();
         if (date) {
           const delta = Date.now() - date;
           if (delta > 0 && delta < new Date(this.duration)) {

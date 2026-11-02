@@ -2,20 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Time</title>
     <link rel="stylesheet" href="./src/styles.css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Roboto+Mono:wght@300;400&display=swap"
+    />
   </head>
   <body>
     <nav>
       <ul>
-        <li><a href="#clock">Clock</a></li>
-        <li><a href="#alarm">Alarm</a></li>
-        <li><a href="#stopwatch">Stopwatch</a></li>
-        <li><a href="#timer">Timer</a></li>
+        <li><a href="#clock"><span class="material-icons" aria-hidden="true">schedule</span>Clock</a></li>
+        <li><a href="#alarm"><span class="material-icons" aria-hidden="true">alarm</span>Alarm</a></li>
+        <li><a href="#stopwatch"><span class="material-icons" aria-hidden="true">timer</span>Stopwatch</a></li>
+        <li><a href="#timer"><span class="material-icons" aria-hidden="true">hourglass_empty</span>Timer</a></li>
       </ul>
     </nav>
     <main>
@@ -83,6 +88,14 @@
         </x-timer>
       </section>
     </main>
+    <audio id="alarm-sound" preload="auto">
+      <source src="./src/audio/alarm.ogg" type="audio/ogg; codecs=vorbis" />
+      <source src="./src/audio/alarm.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="timer-sound" preload="auto">
+      <source src="./src/audio/timer.ogg" type="audio/ogg; codecs=vorbis" />
+      <source src="./src/audio/timer.mp3" type="audio/mpeg" />
+    </audio>
     <script type="module" src="./src/app.js"></script>
   </body>
 </html>
